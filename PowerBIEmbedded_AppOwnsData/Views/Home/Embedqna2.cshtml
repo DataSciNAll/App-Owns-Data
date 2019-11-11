@@ -1,0 +1,71 @@
+﻿@model PowerBIEmbedded_AppOwnsData.Models.EmbedConfig
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://npmcdn.com/es6-promise@3.2.1"></script>
+<script src="~/scripts/powerbi.js"></script>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div id="errorWrapper">
+        <h2>
+            Error
+        </h2>
+        <pre>
+            @Model.ErrorMessage
+        </pre>
+    </div>
+
+    return;
+}
+
+<h2>Embedded Report</h2>
+
+<div id="embedContainer"></div>
+
+<div class="infoBox">
+    Code is in files:<br />
+    1) HomeController.cs<br />
+    2) EmbedReport.cshtml
+</div>
+
+@Html.Partial("LiveDemoLink")
+
+<script>
+    // Read embed application token from Model
+    //var accessToken = "@Model.EmbedToken.Token";
+    var accessToken = "H4sIAAAAAAAEAB1WNa7FCpbcy0_dkn3NbqkDMzM7MzOzR7P3edN5BaWCc-p__rHSd5jT4p9__7OevmCkGzacPtIyd5DfRsyK7d3rt4HYvYxpUbV2BMLPlNwaXWov6uut96YhV6gXYjp_hzlqDWJ_IUY2Oyq6OCcWCU4AHLPcO1FmhS3_lo1V2xj_vr23sIoBMkkgCtOLeK5Vwks5HrsQO8Y4wb4Mhg5vUJ8asj5BTzyUEiX6nXTbiw_ECu3IYdJQK96zpe7pFqyzVMTlzGvxZRCc0DpYXxhl-8F-3O-xZtGCy8RCQ1KK1SEQRtIWS4RDIeA0k2ttinmKJgbX3ycae5iIKpv5Ww54lCHJdKAnnIHo-UUoCuWD9brF-5MU834wTBgODADrXa8TFpkPkq5rGL3rl1dtuIlyv4VUvm2xNeKQ1be206Xrk-yjx4vGlOf9PvfryIGHNmeG5EGamsgncoHvQabe0IIpuvXLgUKttnZPOJc_W1Ghi_DTo3y3IhePTz4tvW2alWaqA_01A3F6m3oSGHuUA6CnQfRB--Zdx4GDKKu1cGxJ9xX8YHZ4Wuxca54RpsmzmVZNTV5kMmIxwLHGwVlTGS7CJXbWB6UAs2f1YeCZip4snttu6m09N9puO9M2wakr1lzUr3LSUpn_ZponhLwCI0JtLCeoLoJGwhyahfj7tNsJS0lAgHNJDHF7wk0VFFnq3qGwEQYXwoP1Fmz0asa0OCCKUra6q7ocuPyyM52m5iSxtrHa8Dm4P9zFg7Hm5pXrKk8q4UrlOV6wEU2FbBXz1qfRpP4xyfnK1kVrihbdqU38Czkki9FDDamLDDXukvguYq2e6kK16zYZijKaofmq4s3FGGjDWrFleJfOwZBLu8EYZWPD9xsRa5R3u8BZdh2lLdiVFB4ThEqbEreLGtGovjs77qrl_TwspTyOxy7nO26F1YbEeQQ_p4m_DPW_PU2PYtygOii6xbVFdzh-EE0Fjlo1PT2KwzLBgXRkxK-QaqUmeBwx8bI-aZuku8zOdvFVZ14f-53qGuoOCAAVRI2RhWuMaDOKSZ2kxO8yR96eHrfHBWscNw2VFHntuTDxnzwHUAoTRD3U6vlEJ-TOCGC9dNArsp_FWbP0uVF1hA-bILZpO1xoQeSopq3fup4R3GuQFKZgQz_Axg6soWYLe-G4PYEMnHf-CZgE9R6PVFPEsFAi5BI1qbXmISOZLyyf4IB8S8ZmqzuNsJpNzJc0cGBzKHzGB8mi1m9lKL58YETSfdiTDObk_hK3dttukyv7OqJzjZMUbAOT81lsdvLI688Ec8h2yJirx60lnrpLZXHlua-6O1CcZ72DOvA2MBR3P5K6sreJO47PDI76XtNMn8NGxJqehFMLgrv7ZBRsLgU0I6TgyeQiEbdaakS3EHXk--5p26FvGsgOyXFm08yxhnMXicgERitiS_joZd64btMPmUETWytDIZfgVgfE8kzSFHRXWvRVxoOcnDupyUNZDxUFBheL4ijhIBtrNOv3cQmcrGJRuF5WAC5PhTmpk6SHA20KOie2kOFo3qLH0KpKRVQCWpHisuZqJp_PLjZaecmyzJCHh6inPLzbH795I7Ga0reQRJbJFHpuWr4oc2LPYwRCnNDREbgf8ly_O11fmOiJRU_4OQL5ckZ0LauPx9nt6QDG3NZxdAt4DMOvvjFTU8SUvJ560wsD9kP2XpzpWd4UHEcPgT3DVgVfw8tml1vy1eOmuUhVkOGYvYuht_eVKT1tZKPZQ1jd149NJUl4N5JfUW4o6Tc5bnXDQ0fINMYuIR4sKZAzW9aDOW-gJicC2gWpjtxlsWbKPldJpFq6ths-SwEvvExfFphRBTJnRr_Hnh0Kv4R4nh59h0Pgon3G86bZOoTW1j9jH5SLrKWtS1N3q_Bi0EuBZF1almyMdcS99rl0OjPKS9BpLbgHHjA4ATIFR4AjTNOzxG6HX0-jv59VddnDcUIr4eUQRnmL3pkHARCL7CvGKGKibl8Bf0xbGv2yBpmh0dArsKW0hy40H-tkLalSrwtgS2ZLX95RrOmd5pnL4rqAsI9SUxv0K8WyL2M6m9UFLF0N6Kzn_nvRiaqcMcGYwxVJuDLURlpcXPWFjo4GrxMZMoF2nl-DjQbtUFHgzrxB3oEiKaVwm_KdoWBTuGCXvKOQGrwapyeCkN-mQy7J60sXvxVDaW53t7j1UvY3myChFLP8V_eJrYoQRxdHVTG2yEC_N1aI4sDvt-C_rQPKunBYGJYNvD2cy9A-rm9zhaHjuwvtViqJ1765XPvNLxDHVOXcTzRr0MWaC68aMD66qS8AvjN0CaOwDCdK2plV6ZD9lUlm9puG3_s3vfPfXoDS7fyWJ6f_88-__mG3dzlmtXz_ps94WBbf3UISaMQrzzZldZmesplttxu6xgoIhKasanDHX9wTI37FjSSTEPNWIwM8GZYYtqRhdA0wsh4mRIDKqCGCAhxCk1GR3vxa_DJeYLaVg9Ft89B9LHt8V8EvRTuR7h8trpvkdePMFK2Vm1RSpI9aMOpvmUIBMm3Ki1LS_epKaKfnNXUnGWT78UwFW3_6eB40EUOGhk8-2KCccfDJhHy_0oJJGQ08f_ToZUDSYE2Vs7kH8c1fsv4jTSVUzcLBX9mpBSBtu1_n5kzWEZVg4hLwGSKBi5SnbMkAjxv6l8FwBUY00th27-8BPZUuCRWDRqsW7HmlvmKqwzm3eol5YARB2P_5r8zv0pSbHPypbHbjvGgDAOjFEOOk9EkLxN7_RbltPaXHuZV_MF-EcqS0veHyf1jRPAOJT0L24KwLWn3C9jxDWeId4Fnguo714qIJ4_hxzDRywam3odWLpHKds_48kWO9QoidUsU8KQNbRi5bULvlg2jgG4UDLWu3ZG7N3pOl12fX5PlpVbg_r0pQTxMSlyPQBpqzOLu12zlXMx6IcWV0HNci5ujIwcIvXCHzZsgm1ERohQrZcg_Tb4xZu-r0zQ-p7R1yVIxsRvpgOjhLXEBx-SOMf39HZCfT3OwLGkpMBQwQMu40QwpvsNK4oBqKK7MRlAFSMRuQ9sLakBC3ggn0z4SbYIKUIT4H3gj02tDj9u8SVyNriczvxPoJUVGwyVrNGib4zxvl_8343_8DkHIFR-4LAAA="
+    // Read embed URL from Model
+    var embedUrl = "https://app.powerbi.com/qnaEmbed?groupId=b3f8f255-a73b-4bf4-9038-2cf2a04e000c";
+
+    // Read report Id from Model
+    var embedReportId = "dbba032d-a7cf-40a3-afd2-93464883471f";
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config = {
+        type: 'qna',
+        tokenType: models.TokenType.Embed,
+        accessToken: accessToken,
+        embedUrl: embedUrl,
+        datasetIds: embedReportId,
+        viewMode: models.QnAMode.ResultOnly,
+        question: 'Sales by region'
+    };
+
+    // Get a reference to the embedded report HTML element
+    var qnaContainer = $('#embedContainer')[0];
+    
+    // Embed the report and display it within the div container.
+    var report = powerbi.embed(qnaContainer, config);
+    //qna.off("loaded");
+
+</script>

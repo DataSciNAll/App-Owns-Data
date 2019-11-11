@@ -1,0 +1,60 @@
+﻿@model PowerBIEmbedded_AppOwnsData.Models.EmbedConfig
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://npmcdn.com/es6-promise@3.2.1"></script>
+<script src="~/scripts/powerbi.js"></script>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div id="errorWrapper">
+        <h2>
+            Error
+        </h2>
+        <pre>
+            @Model.ErrorMessage
+        </pre>
+    </div>
+
+    return;
+}
+<h2>Embedded QnA</h2>
+
+<div id="QnaContainer"></div>
+
+<div class="infoBox">
+    Code is in files:<br />
+    1) HomeController.cs<br />
+    2) EmbedQna.cshtml
+</div>
+@Html.Partial("LiveDemoLink")
+<script>
+    // Read embed application token from Model
+    var accessToken = "@Model.EmbedToken.Token";
+
+    // Read embed URL from Model
+    var embedUrl = "@Html.Raw(Model.EmbedUrl)";
+
+    // Read report Id from Model
+    var embedDatasetId = "dbba032d-a7cf-40a3-afd2-93464883471f";
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    var config = {
+        type: 'qna',
+        tokenType: models.TokenType.Embed,
+        accessToken: accessToken,
+        embedUrl: embedUrl,
+        id: embedmoDatasetId,
+        viewmode: models.QnaMode.Interactive
+    };
+
+    // Get a reference to the embedded report HTML element
+    //var reportContainer = $('#embedContainer')[0];
+    var qnaContainer = $('#embedContainer')[0];
+
+
+    // Embed the qna and display it within the div container.
+    var qna = powerbi.embed(embedContainer, config);
+</script>
