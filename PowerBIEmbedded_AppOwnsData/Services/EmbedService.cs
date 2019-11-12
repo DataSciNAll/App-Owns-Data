@@ -102,8 +102,8 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     if (!string.IsNullOrWhiteSpace(username))
                     {
                         //Line 105 is for DirectQuery or Import Connection for RLS; Line 106 LiveConnection using CustomData
-                        var rls = new EffectiveIdentity(username, new List<string> { report.DatasetId });
-                        //var rls = new EffectiveIdentity(username, new List<string> { report.DatasetId }, new List<string>() { CustomData }, CustomData);
+                        //var rls = new EffectiveIdentity(username, new List<string> { report.DatasetId });
+                        var rls = new EffectiveIdentity(username, new List<string> { report.DatasetId }, new List<string>() { CustomData }, CustomData);
                         if (!string.IsNullOrWhiteSpace(roles))
                         {
                             var rolesList = new List<string>();

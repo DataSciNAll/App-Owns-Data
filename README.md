@@ -1,5 +1,14 @@
 # App Owns Data samples
 
+## Objective of this Project
+The purpose of this repository is to showcase code on how to integrate Power BI Embed application with Azure 
+Analysis Services.  CustomData() is a function in AAS that controls Row Level Security.  The Power BI Embed
+App needs to pass a parameter into CUSTOMDATA when generating the Power BI Embed token.  This example reuses the
+App Owns Data project from Microsoft and adds the following;
+
+1. CUSTOMDATA field add to UI to pass in a single parameter
+2. Setup of Service Principal when using Effective Identity
+
 Read this documentation to prepare your environment
 https://docs.microsoft.com/en-us/power-bi/developer/embedding-content
 
@@ -23,6 +32,13 @@ To embed reports, dashboards and tiles, the following details must be specified 
 | pbiPassword       | The password of the Power BI user above. (For Master User Only)                                       |
 | applicationSecret | Seecret Key of the AAD application registered as a NATIVE app. (For Service Principal Only)           |
 | tenant            | Tenant Id of the Apllication   . (For Service Principal Only)                                         |
+| spobjectid        | Service Principal Object ID.  User ID to submit to Embed Token                                        |
+| sprole            | Generic role to submit for effective Identity                                                         |
+
+##Modifications to EmbedService.cs
+Comment Line 105 or Line 106 to pass into Embed Token CUSTOMDATA.  Line 106 for Live Connections and Line 105 for everything else
+
+Comment Line 121 & Line 122 or Line 124 to enable Service Principal. LIne 121 & Line 122 for CUSTOMDATA + SP and Line 124 for all else
 
 
 ## Important
